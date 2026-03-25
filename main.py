@@ -139,14 +139,17 @@ class App:
             injection_time = self.extract_element_from_json_if_present(data_fields, 'tracer/startTime')
             scanner_model = self.extract_element_from_json_if_present(data_fields, 'scanner/model')
             
+            if not experiment_json['children']:
+                return []
             scans = experiment_json['children'][0]['items']
 
             for scan in scans:
+                if 'data_fields' not in scan.keys():
+                    continue
                 scan_data_fields = scan['data_fields']
 
                 if 'modality' not in scan_data_fields:
                     continue
-                
                 modality = scan_data_fields['modality'].upper()
                 if modality != 'PT' and modality != 'PET' and modality != 'CT':
                     continue
